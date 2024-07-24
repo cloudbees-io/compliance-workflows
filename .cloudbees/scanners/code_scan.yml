@@ -39,11 +39,13 @@ jobs:
         if: ${{ steps.plan.outputs.gosec == 'true' }}
         uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-gosec-scanner:latest
         run: /app/plugin-gosec-scanner -mode single
-      #
-      - name: FindSecBugs Scanner
-        if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
-        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-findsecbugs-scanner:latest
-        run: /app/plugin-findsecbugs -mode single
+
+      - name: Gitleaks Scanner
+        if: ${{ steps.plan.outputs.gitleaks == 'true' }}
+        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-gitleaks-scanner:latest
+        env:
+          CH_OUTPUT_DISABLED: false
+        run: /app/plugin-gitleaks-scanner -mode single
 
       - name: Complete execution plan
         uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-plugin-chain-utils:latest
