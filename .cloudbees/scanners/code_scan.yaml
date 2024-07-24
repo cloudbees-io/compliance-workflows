@@ -6,7 +6,7 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:2b557eac794216a9df73d0563e85adbb4689c94a
         id: plan
         with:
           entrypoint: assets-plugin-chain-utils
@@ -18,37 +18,37 @@ jobs:
 
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-master == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:8fe64845ce15820f32862e99b472812e9588cbe8
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-master -mode single
 
       - name: Github Metadata
         if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:f5fc8b8d840fb6fdda5e5b54c37610411644abc5
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
 
       - name: SCC Scanner
         if: ${{ steps.plan.outputs.scc == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:1185db321a9e215aa9b3cb27eeb7224811c44670
         run: /app/plugin-scc-scanner -mode single
 
       - name: GoSec Scanner
         if: ${{ steps.plan.outputs.gosec == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:2440fd6b00044b3c8c5646f10f11b8f38714c7e0
         run: /app/plugin-gosec-scanner -mode single
 
       - name: Gitleaks Scanner
         if: ${{ steps.plan.outputs.gitleaks == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:6bead199da3459c4c7ca93dc0b172b36bb0f4ff1
         env:
           CH_OUTPUT_DISABLED: false
         run: /app/plugin-gitleaks-scanner -mode single
 
       - name: Complete execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:latest
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:2b557eac794216a9df73d0563e85adbb4689c94a
         id: process-outputs
         with:
           entrypoint: assets-plugin-chain-utils
