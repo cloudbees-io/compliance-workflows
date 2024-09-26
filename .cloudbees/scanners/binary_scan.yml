@@ -1,0 +1,56 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name:  binary_scan
+
+jobs:
+  scan:
+    steps:
+      - name: Initiate execution plan
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:765ac0fbe2fd4f378adae5be32130aeb702d66a3
+        id: plan
+        with:
+          entrypoint: assets-plugin-chain-utils
+          args: configure
+        env:
+          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
+          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
+          INPUT_RUN_ID: ${{ cloudbees.run_id }}
+          INPUT_PLUGIN_LIST: 'trivy,findsecbugs'
+      - name: Workflow Artifact Inventory
+        if: ${{ steps.plan.outputs.wfartifact-master == 'true' }}
+        env:
+          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
+          INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
+          INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
+          EXECUTION_ROLE: "MASTER"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:1148b8d30b058ed1e1f3e2cc89a64db0d7d154e2
+        run: /app/plugin-cbp-workflow-artifacts -mode single
+      - name: Workflow Artifact Metadata
+        if: ${{ steps.plan.outputs.wfartifact-decorator == 'true' }}
+        env:
+          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
+          INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
+          INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
+          EXECUTION_ROLE: "DECORATOR"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:1148b8d30b058ed1e1f3e2cc89a64db0d7d154e2
+        run: /app/plugin-cbp-workflow-artifacts -mode single
+      - name: Trivy Scanner
+        if: ${{ steps.plan.outputs.trivy == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:3a4ca63af7524d2773ff72ca5a2e27acf7641b25
+        run: /app/plugin-trivy-scanner -mode single
+
+      - name: FindSecBugs Scanner
+        if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:2e38eca150421b0fbd31e28629f7a54c096cf5e3
+        run: /app/plugin-findsecbugs -mode single
+
+      - name: Complete execution plan
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:765ac0fbe2fd4f378adae5be32130aeb702d66a3
+        id: process-outputs
+        with:
+          entrypoint: assets-plugin-chain-utils
+          args: process-outputs
+        env:
+          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
+          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
+          INPUT_RUN_ID: ${{ cloudbees.run_id }}
