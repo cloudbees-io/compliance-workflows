@@ -19,14 +19,14 @@ jobs:
 
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-master == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:9c484fbe84aa689f63fc6022bc83b5f765f1323a
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:103ddf557d1bbd7e5dc830516db7a57af62d8e3b
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-master -mode single
 
       - name: Github Metadata
         if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:fa856435cda98d54d00057e5ecae53a7ec546574
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:6325f3a3f938762f04bc4fc7c5b1099218e49c16
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
