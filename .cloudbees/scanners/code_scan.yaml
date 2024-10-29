@@ -42,12 +42,6 @@ jobs:
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:25eb8f709744d880dcaa0c2f44daf6baa39fe288
         continue-on-error: true
         run: /app/plugin-gosec-scanner -mode single
-     
-     - name: Njs Scanner
-        if: ${{ steps.plan.outputs.njsscan == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-njsscan-scanner:084242a4b2537f34b139ba50dc66b873fc21bcbe
-        continue-on-error: true
-        run: /app/plugin-njsscan-scanner -mode single
 
       - name: Gitleaks Scanner
         if: ${{ steps.plan.outputs.gitleaks == 'true' }}
