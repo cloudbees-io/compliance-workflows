@@ -39,7 +39,7 @@ jobs:
 
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:e181a913cf03f17783fd822f6a14c0ec9d8bbd7d
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:615e474fca34153f9d8bd8eed1a7bdabeabf04ed
         continue-on-error: true
         run: /app/plugin-trivy-scanner -mode single
 
