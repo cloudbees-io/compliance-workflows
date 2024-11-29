@@ -6,7 +6,7 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:59cf7112b01c107036fb32dbb272402525a50ba0
         id: plan
         with:
           entrypoint: assets-plugin-chain-utils
@@ -24,7 +24,7 @@ jobs:
           INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
           INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
           EXECUTION_ROLE: "MASTER"
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:63f8efaff2ccd9604fbb222e55bf4d4950930c49
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:8382e6e9950699b950b709f0bf18508b8b344f3d
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
       - name: Workflow Artifact Metadata
@@ -34,18 +34,18 @@ jobs:
           INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
           INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
           EXECUTION_ROLE: "DECORATOR"
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:63f8efaff2ccd9604fbb222e55bf4d4950930c49
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:8382e6e9950699b950b709f0bf18508b8b344f3d
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:d57d898c6fc5b8510023d6873ef80eb5e15c9b4e
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:615e474fca34153f9d8bd8eed1a7bdabeabf04ed
         continue-on-error: true
         run: /app/plugin-trivy-scanner -mode single
 
       - name: FindSecBugs Scanner
         if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:57b6972c60a4e285c10e4fbbc9740be3c67ef906
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:932f444a36c0dc3fc6e9a1d27b831169f41f3144
         continue-on-error: true
         run: /app/plugin-findsecbugs -mode single
 
@@ -57,12 +57,12 @@ jobs:
 
       - name: Grype Scanner
         if: ${{ steps.plan.outputs.grype == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-grype-scanner:c0a7492658472fbb0d6efd822c36207c83d44cea
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-grype-scanner:09c7f12ff47ccf11594aa312a2b0389256ee3951
         continue-on-error: true
         run: /app/plugin-grype-scanner -mode single
 
       - name: Complete execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:59cf7112b01c107036fb32dbb272402525a50ba0
         id: process-outputs
         with:
           entrypoint: assets-plugin-chain-utils
