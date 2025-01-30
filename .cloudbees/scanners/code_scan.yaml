@@ -18,7 +18,7 @@ jobs:
           INPUT_PLUGIN_LIST: 'github-inventory,github-decorator,bitbucket-inventory,bitbucket-decorator,gosec,njsscan,gitleaks,checkov'
 
       - name: Github Inventory
-        if: ${{ steps.plan.outputs.github-master == 'true' }}
+        if: ${{ steps.plan.outputs.github-inventory == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:82fdab75a9fc19020f28529695753415e6020d90
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
