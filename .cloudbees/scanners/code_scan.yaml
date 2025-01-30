@@ -15,7 +15,7 @@ jobs:
           INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
           INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
           INPUT_RUN_ID: ${{ cloudbees.run_id }}
-          INPUT_PLUGIN_LIST: 'gosec,njsscan,gitleaks,checkov'
+          INPUT_PLUGIN_LIST: 'github-inventory,github-decorator,bitbucket-inventory,bitbucket-decorator,gosec,njsscan,gitleaks,checkov'
 
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-master == 'true' }}
@@ -30,6 +30,22 @@ jobs:
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
+
+      - name: Bitbucket Inventory
+        if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:417669b0fce4fe4fdd3ff80777667a43e2506cca
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "MASTER"
+        run: /app/plugin-bitbucket -mode single
+
+      - name: Bitbucket Metadata
+        if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:417669b0fce4fe4fdd3ff80777667a43e2506cca
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "DECORATOR"
+        run: /app/plugin-bitbucket -mode single
 
       - name: SCC Scanner
         if: ${{ steps.plan.outputs.scc == 'true' }}
