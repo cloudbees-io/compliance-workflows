@@ -19,7 +19,7 @@ jobs:
 
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:82fdab75a9fc19020f28529695753415e6020d90
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:842052b66e094b8ce693af417e1fe5d1ead72ce2
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-master -mode single
