@@ -24,7 +24,7 @@ jobs:
           INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
           INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
           EXECUTION_ROLE: "MASTER"
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:63f8efaff2ccd9604fbb222e55bf4d4950930c49
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:a74f4f43b0a4343f88445b7befe8067e57588ce1
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
       - name: Workflow Artifact Metadata
