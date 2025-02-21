@@ -6,16 +6,8 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:ac3061124d8d32e515c8a03cb2af84d25bff1133
+        uses: cloudbees-io/asset-chain-utils/start-chain@v1
         id: plan
-        with:
-          entrypoint: assets-plugin-chain-utils
-          args: configure
-        env:
-          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
-          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
-          INPUT_RUN_ID: ${{ cloudbees.run_id }}
-          INPUT_INIT_OUTPUTS: 'trivy,findsecbugs,syft,grype'
 
       - name: Workflow Artifact Inventory
         if: ${{ steps.plan.outputs.wfartifact-inventory == 'true' }}
@@ -78,12 +70,5 @@ jobs:
         run: /app/plugin-grype-scanner -mode single
 
       - name: Complete execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:ac3061124d8d32e515c8a03cb2af84d25bff1133
+        uses: cloudbees-io/asset-chain-utils/end-chain@v1
         id: process-outputs
-        with:
-          entrypoint: assets-plugin-chain-utils
-          args: process-outputs
-        env:
-          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
-          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
-          INPUT_RUN_ID: ${{ cloudbees.run_id }}
