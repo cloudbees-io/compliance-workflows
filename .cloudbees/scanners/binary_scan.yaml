@@ -6,7 +6,7 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:ac3061124d8d32e515c8a03cb2af84d25bff1133
         id: plan
         with:
           entrypoint: assets-plugin-chain-utils
@@ -24,7 +24,7 @@ jobs:
           INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
           INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
           EXECUTION_ROLE: "MASTER"
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:a74f4f43b0a4343f88445b7befe8067e57588ce1
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:fdcc5aceb0adc0ea70cba5f3e5b94bfc0bc13750
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
       - name: Workflow Artifact Metadata
@@ -34,35 +34,51 @@ jobs:
           INPUT_WF_ARTIFACT_TOKEN: ${{ steps.plan.outputs.wf_artifact_token }}
           INPUT_COMPONENT_ID: ${{ steps.plan.outputs.wf_artifact_component_id }}
           EXECUTION_ROLE: "DECORATOR"
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:63f8efaff2ccd9604fbb222e55bf4d4950930c49
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:fdcc5aceb0adc0ea70cba5f3e5b94bfc0bc13750
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:d57d898c6fc5b8510023d6873ef80eb5e15c9b4e
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:90ac7296abb2c0c877b3364b5ce21ccf50cb0353
+        env:
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
         continue-on-error: true
         run: /app/plugin-trivy-scanner -mode single
 
       - name: FindSecBugs Scanner
         if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:57b6972c60a4e285c10e4fbbc9740be3c67ef906
+        env:
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
         continue-on-error: true
         run: /app/plugin-findsecbugs -mode single
 
       - name: Syft SBOM analyser
         if: ${{ steps.plan.outputs.syft == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-syft-sbom:e2c024c27b48510a7943a072d77f9e1d2fe22510
+        env:
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
         continue-on-error: true
         run: /app/plugin-syftbom-analyser -mode single
 
       - name: Grype Scanner
         if: ${{ steps.plan.outputs.grype == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-grype-scanner:c0a7492658472fbb0d6efd822c36207c83d44cea
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-grype-scanner:24c5c03b4793488b64cfb076262f28b81727cdf6
+        env:
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
         continue-on-error: true
         run: /app/plugin-grype-scanner -mode single
 
       - name: Complete execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:ac3061124d8d32e515c8a03cb2af84d25bff1133
         id: process-outputs
         with:
           entrypoint: assets-plugin-chain-utils
