@@ -6,16 +6,8 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: cloudbees-io/asset-chain-utils/start-chain@v1
         id: plan
-        with:
-          entrypoint: assets-plugin-chain-utils
-          args: configure
-        env:
-          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
-          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
-          INPUT_RUN_ID: ${{ cloudbees.run_id }}
-          INPUT_PLUGIN_LIST: 'github-inventory,github-decorator,bitbucket-inventory,bitbucket-decorator,gosec,njsscan,gitleaks,checkov'
 
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-inventory == 'true' }}
@@ -98,12 +90,5 @@ jobs:
         run: /app/plugin-checkov -mode single
 
       - name: Complete execution plan
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-plugin-chain-utils:0b07952a5146395387b1fa898f4f632926e53e3a
+        uses: cloudbees-io/asset-chain-utils/end-chain@v1
         id: process-outputs
-        with:
-          entrypoint: assets-plugin-chain-utils
-          args: process-outputs
-        env:
-          INPUT_CLOUDBEES_API_TOKEN: ${{ cloudbees.api.token }}
-          INPUT_CLOUDBEES_API_URL: ${{ cloudbees.api.url }}
-          INPUT_RUN_ID: ${{ cloudbees.run_id }}
