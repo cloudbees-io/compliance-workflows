@@ -90,6 +90,17 @@ jobs:
         continue-on-error: true
         run: /app/plugin-sonarqube-scanner -mode single
 
+      - name: BlackDuck Scanner
+        if: ${{ steps.plan.outputs.blackduck == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:cb2cbcd89c3ec67d7617a16de8083918e5f31853
+        env:
+          BLACKDUCK_PROPS : ${{ steps.plan.outputs.blackduck-props}}
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
+        continue-on-error: true
+        run: /app/plugin-blackduck-scanner -mode single
+
       - name: Checkov Scanner
         if: ${{ steps.plan.outputs.checkov == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:f1130860d6193c89a2fd6099d0fb41c4484869a9
