@@ -79,17 +79,6 @@ jobs:
           STEP_ID: ${{ step.internal.id }}
         run: /app/plugin-gitleaks-scanner -mode single
 
-      - name: Sonar Scanner
-        if: ${{ steps.plan.outputs.sonar == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:d22c15088ff7668499d80bc4d204966d9ca7d2d9
-        env:
-          SONARQUBE_PROPS: ${{ steps.plan.outputs.sonar-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-sonarqube-scanner -mode single
-
       - name: BlackDuck Scanner
         if: ${{ steps.plan.outputs.blackduck == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:972b481230678d250ea13f34ef82531f05b6ea25
@@ -101,6 +90,17 @@ jobs:
         continue-on-error: true
         run: /app/plugin-blackduck-scanner -mode single
 
+      - name: Coverity Polaris Scanner
+        if: ${{ steps.plan.outputs.coverity == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-coverity-sca:df2e0193e1720f78db612cf13edb600150d1792f
+        env:
+          COVERITY_PROPS : ${{ steps.plan.outputs.coverity-props}}
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
+        continue-on-error: true
+        run: /app/plugin-coverity-polaris -mode single
+
       - name: Checkov Scanner
         if: ${{ steps.plan.outputs.checkov == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:f1130860d6193c89a2fd6099d0fb41c4484869a9
@@ -110,6 +110,18 @@ jobs:
           STEP_ID: ${{ step.internal.id }}
         continue-on-error: true
         run: /app/plugin-checkov -mode single
+
+      - name: Sonar Scanner
+        if: ${{ steps.plan.outputs.sonar == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:d22c15088ff7668499d80bc4d204966d9ca7d2d9
+        env:
+          SONARQUBE_PROPS: ${{ steps.plan.outputs.sonar-props}}
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
+        continue-on-error: true
+        run: /app/plugin-sonarqube-scanner -mode single
+
 
       - name: Complete execution plan
         uses: cloudbees-io/asset-chain-utils/end-chain@v1
