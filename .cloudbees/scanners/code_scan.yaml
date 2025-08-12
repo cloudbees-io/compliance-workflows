@@ -25,7 +25,7 @@ jobs:
 
       - name: Bitbucket Inventory
         if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:417669b0fce4fe4fdd3ff80777667a43e2506cca
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:eb81dba284f3a4fc1c5c60de0dd0c8946f8b4ae2
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -33,7 +33,7 @@ jobs:
 
       - name: Bitbucket Metadata
         if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:417669b0fce4fe4fdd3ff80777667a43e2506cca
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:eb81dba284f3a4fc1c5c60de0dd0c8946f8b4ae2
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
@@ -81,7 +81,7 @@ jobs:
 
       - name: BlackDuck Scanner
         if: ${{ steps.plan.outputs.blackduck == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:972b481230678d250ea13f34ef82531f05b6ea25
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:f0bf9cebb1b27fe54762c4fcb254697a255bcaec
         env:
           BLACKDUCK_PROPS : ${{ steps.plan.outputs.blackduck-props}}
           RUN_ID: ${{ cloudbees.run_id }}
