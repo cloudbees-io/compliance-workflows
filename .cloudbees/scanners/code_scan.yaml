@@ -9,16 +9,17 @@ jobs:
         uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
         id: plan
 
+
       - name: Github Inventory
         if: ${{ steps.plan.outputs.github-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:0c61e45e18b4155246f1e0b1c6bf7275d96c3da9
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:e7444f9a1dad87482778356ec66dcd5f22e1e71e
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-master -mode single
 
       - name: Github Metadata
         if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:c725c4df53250b0833d1e2a0033e3274f290dfd7
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:532d1b6873dbbc40ab3e3726a8d929f8e4d02d99
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
@@ -41,7 +42,7 @@ jobs:
 
       - name: SCC Scanner
         if: ${{ steps.plan.outputs.scc == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:1a81610bbb3d6e6f2c4586f21d85638e56718a70
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:6c844d4427ec4ed03fdee4aec65a671cf840d6a4
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -51,7 +52,7 @@ jobs:
 
       - name: GoSec Scanner
         if: ${{ steps.plan.outputs.gosec == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:1b2c0980e5495cc0132a3e693ba8e6ebf2c7cd71
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:eb064c4e8ba64a4516a6eb86db2dc76f13f20a53
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -61,7 +62,7 @@ jobs:
 
       - name: Njs Scanner
         if: ${{ steps.plan.outputs.njsscan == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-njsscan-scanner:6729338d9bada7a0ccc39dfe85f72862df80250c
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-njsscan-scanner:b62ff1818f2f69887eeaaae97099695c8774d2b1
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -71,7 +72,7 @@ jobs:
 
       - name: Gitleaks Scanner
         if: ${{ steps.plan.outputs.gitleaks == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:ff0ca194ecb33e2eb6c5ba18c9b9a6ca905c4af0
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:7ea235e34a162a35b4b03775e8dca2c773d1f7c3
         continue-on-error: true
         env:
           RUN_ID: ${{ cloudbees.run_id }}
@@ -103,7 +104,7 @@ jobs:
 
       - name: Checkov Scanner
         if: ${{ steps.plan.outputs.checkov == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:f1130860d6193c89a2fd6099d0fb41c4484869a9
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:f0108b3408abe89b095b0af3c9bf47b96ec6970b
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}

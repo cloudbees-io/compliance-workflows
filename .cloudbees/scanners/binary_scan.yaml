@@ -31,7 +31,7 @@ jobs:
 
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:90ac7296abb2c0c877b3364b5ce21ccf50cb0353
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:91e1e9e794cb9c2bb69f44b41ab9c3ff5f765ca8
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -41,7 +41,7 @@ jobs:
 
       - name: FindSecBugs Scanner
         if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:57b6972c60a4e285c10e4fbbc9740be3c67ef906
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:d765e91c1af6d98626d5d6de10f8bd7c1909b9a4
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -51,7 +51,7 @@ jobs:
 
       - name: Syft SBOM analyser
         if: ${{ steps.plan.outputs.syft == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-syft-sbom:e2c024c27b48510a7943a072d77f9e1d2fe22510
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-syft-sbom:bf0c0eed8d7205c57e618a10afad78f74b6ed808
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
