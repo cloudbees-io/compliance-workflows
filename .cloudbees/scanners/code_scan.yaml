@@ -39,6 +39,22 @@ jobs:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
         run: /app/plugin-bitbucket -mode single
+        
+      - name: Gerrit Inventory
+        if: ${{ steps.plan.outputs.gerrit-inventory == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:4f67b70bc378823d7583b4f53d56c552c943adfb
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "MASTER"
+        run: /app/plugin-gerrit -mode single
+
+      - name: Gerrit Metadata
+        if: ${{ steps.plan.outputs.gerrit-decorator == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:4f67b70bc378823d7583b4f53d56c552c943adfb
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "DECORATOR"
+        run: /app/plugin-gerrit -mode single
 
       - name: SCC Scanner
         if: ${{ steps.plan.outputs.scc == 'true' }}
