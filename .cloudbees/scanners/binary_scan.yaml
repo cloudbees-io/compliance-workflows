@@ -9,6 +9,32 @@ jobs:
         uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
         id: plan
 
+      # Login to AWS if region and role arn are provided to pull private images from ECR
+      - name: Login to AWS
+        if: ${{ steps.plan.outputs.ecr_region_name != 'false' && steps.plan.outputs.ecr_role_arn != 'false' }}
+        uses: https://github.com/cloudbees-io/configure-aws-credentials@v1
+        id: aws-login
+        with:
+          aws-region: ${{ steps.plan.outputs.ecr_region_name }}
+          role-to-assume: ${{ steps.plan.outputs.ecr_role_arn }}
+          role-duration-seconds: "3600"
+
+      - name: ECR Artifact Inventory
+        if: ${{ steps.plan.outputs.ecr-inventory == 'true' }}
+        env:
+          INPUT_AWS_REGION: ${{ steps.plan.outputs.ecr_region_name }}
+          EXECUTION_ROLE: "MASTER"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-aws-ecr:1b58cd9a75aaf586d2d377bc09f8e92e65ef66ac
+        run: /app/plugin-aws-ecr -mode single
+
+      - name: ECR Artifact Metadata
+        if: ${{ steps.plan.outputs.ecr-metadata == 'true' }}
+        env:
+          INPUT_AWS_REGION: ${{ steps.plan.outputs.ecr_region_name }}
+          EXECUTION_ROLE: "DECORATOR"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-aws-ecr:1b58cd9a75aaf586d2d377bc09f8e92e65ef66ac
+        run: /app/plugin-aws-ecr -mode single
+
       - name: Workflow Artifact Inventory
         if: ${{ steps.plan.outputs.wfartifact-inventory == 'true' }}
         env:
