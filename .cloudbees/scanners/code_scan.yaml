@@ -128,6 +128,18 @@ jobs:
         continue-on-error: true
         run: /app/plugin-checkov -mode single
 
+      - name: Perforce Klocwork Scanner
+        if: ${{ steps.plan.outputs.perforce-klocwork-sast == 'true' }}
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:fdb53c7fd3c1e8c795c2796e7414edbada9b6113
+        env:
+          KLOCWORK_PROPS: ${{ steps.plan.outputs.perforce-klocwork-sast-props}}
+          RUN_ID: ${{ cloudbees.run_id }}
+          JOB_ID: ${{ job.id }}
+          STEP_ID: ${{ step.internal.id }}
+        continue-on-error: true
+        run: /app/plugin-klocwork-scanner -mode single
+
+
       - name: Sonar Scanner
         if: ${{ steps.plan.outputs.sonar == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:75d608d933dc16ac6c91272a9faec761cc67314c
