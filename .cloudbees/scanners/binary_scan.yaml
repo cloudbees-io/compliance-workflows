@@ -59,6 +59,22 @@ jobs:
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cbp-workflow-artifacts:fdcc5aceb0adc0ea70cba5f3e5b94bfc0bc13750
         run: /app/plugin-cbp-workflow-artifacts -mode single
 
+      - name: JFrog Artifactory Inventory
+        if: ${{ steps.plan.outputs.jfrog-inventory == 'true' }}
+        env:
+          INPUT_JFROG_TOKEN: ${{ steps.plan.outputs.jfrog_token }}
+          EXECUTION_ROLE: "MASTER"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-jfrog-artifactory:919cef50cae65be5c036ca62a0918e99e1c889d8
+        run: /app/plugin-jfrog -mode single
+
+      - name: JFrog Artifactory Metadata
+        if: ${{ steps.plan.outputs.jfrog-metadata == 'true' }}
+        env:
+          INPUT_JFROG_TOKEN: ${{ steps.plan.outputs.jfrog_token }}
+          EXECUTION_ROLE: "DECORATOR"
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-jfrog-artifactory:919cef50cae65be5c036ca62a0918e99e1c889d8
+        run: /app/plugin-jfrog -mode single
+
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:91e1e9e794cb9c2bb69f44b41ab9c3ff5f765ca8
