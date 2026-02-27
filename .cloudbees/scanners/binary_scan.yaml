@@ -87,7 +87,7 @@ jobs:
 
       - name: FindSecBugs Scanner
         if: ${{ steps.plan.outputs.findsecbugs == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:d765e91c1af6d98626d5d6de10f8bd7c1909b9a4
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-findsecbugs-scanner:2cd7ed1936c936e8bd857c39aa2e873537adcc27
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
