@@ -19,14 +19,14 @@ jobs:
 
       - name: Github Metadata
         if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:532d1b6873dbbc40ab3e3726a8d929f8e4d02d99
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:c390975713c23c76a84c0570322ee799d09083c3
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
 
       - name: Bitbucket Inventory
         if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:eb81dba284f3a4fc1c5c60de0dd0c8946f8b4ae2
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -34,7 +34,7 @@ jobs:
 
       - name: Bitbucket Metadata
         if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:eb81dba284f3a4fc1c5c60de0dd0c8946f8b4ae2
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
@@ -42,7 +42,7 @@ jobs:
         
       - name: Gerrit Inventory
         if: ${{ steps.plan.outputs.gerrit-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:4f67b70bc378823d7583b4f53d56c552c943adfb
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -50,7 +50,7 @@ jobs:
 
       - name: Gerrit Metadata
         if: ${{ steps.plan.outputs.gerrit-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:4f67b70bc378823d7583b4f53d56c552c943adfb
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
@@ -58,7 +58,7 @@ jobs:
 
       - name: GitLab Inventory
         if: ${{ steps.plan.outputs.gitlab-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:0a0bdd22720e9f3334ef955a9f84aab36c116d4c
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -66,7 +66,7 @@ jobs:
 
       - name: GitLab Metadata
         if: ${{ steps.plan.outputs.gitlab-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:0a0bdd22720e9f3334ef955a9f84aab36c116d4c
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
@@ -74,7 +74,7 @@ jobs:
 
       - name: SCC Scanner
         if: ${{ steps.plan.outputs.scc == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:9393ab805bb706c829c471e1dfc8e6ee73541253
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:7fa7cb33d5da26ef1477d3dc3e4846a770fa3aa0
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -84,7 +84,7 @@ jobs:
 
       - name: GoSec Scanner
         if: ${{ steps.plan.outputs.gosec == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:b21ddfe60cc66e8ffed60d89da6e50bd4dcd5660
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:98da9672f3391f4b20a9bd8090ca438658a2da39
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -104,7 +104,7 @@ jobs:
 
       - name: Gitleaks Scanner
         if: ${{ steps.plan.outputs.gitleaks == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:7ea235e34a162a35b4b03775e8dca2c773d1f7c3
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:692a09d50b21acbb6e0d62cef92b768dfe84f91f
         continue-on-error: true
         env:
           RUN_ID: ${{ cloudbees.run_id }}
@@ -136,7 +136,7 @@ jobs:
 
       - name: Checkov Scanner
         if: ${{ steps.plan.outputs.checkov == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:28c61f52d97a97c79b07f1e0c5576af64e8ce3e8
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:1c7c6b7a4e0fb030fd31ec9c7cd18b1c6897e00c
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
