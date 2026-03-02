@@ -146,7 +146,7 @@ jobs:
 
       - name: Snyk SAST Scanner
         if: ${{ steps.plan.outputs.snykcode == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sast-scanner:ce817b2ddbfc49b4b31888204347f567b642fde9
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sast-scanner:b0ff80552121e1c8a4cfc169a7811f67e899fd11
         env:
           SNYK_SAST_PROPS: ${{ steps.plan.outputs.snykcode-props}}
           RUN_ID: ${{ cloudbees.run_id }}
@@ -157,7 +157,7 @@ jobs:
 
       - name: Snyk IaC Scanner
         if: ${{ steps.plan.outputs.snyk-iac == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-iac-scanner:2bdcf9e581405f26f0314842e13192da0da6b123
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-iac-scanner:d1c5db9841deee259bb4c736cf1222ec5600f845
         env:
           SNYK_IAC_PROPS: ${{ steps.plan.outputs.snyk-iac-props}}
           RUN_ID: ${{ cloudbees.run_id }}
@@ -168,7 +168,7 @@ jobs:
 
       - name: Snyk SCA Scanner
         if: ${{ steps.plan.outputs.snyksca == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sca-scanner:80bea9113f19c64c9ff1d4c6a86c0519fbfebaab
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sca-scanner:26beda73d553bb1925103a14f7d721083b3e149a
         env:
           SNYK_SCA_PROPS: ${{ steps.plan.outputs.snyksca-props}}
           RUN_ID: ${{ cloudbees.run_id }}
@@ -179,7 +179,7 @@ jobs:
 
       - name: Perforce Klocwork Scanner
         if: ${{ steps.plan.outputs.perforce-klocwork-sast == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:fdb53c7fd3c1e8c795c2796e7414edbada9b6113
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:a4ec7ead705ee92b068b55daa2bab2f3e82a044b
         env:
           KLOCWORK_PROPS: ${{ steps.plan.outputs.perforce-klocwork-sast-props}}
           RUN_ID: ${{ cloudbees.run_id }}
