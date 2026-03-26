@@ -1,206 +1,209 @@
-apiVersion: automation.cloudbees.io/v1alpha1
-kind: workflow
-name:  scan
+  apiVersion: automation.cloudbees.io/v1alpha1                                                                                                                                                                                                      
+  kind: workflow                                                                                                                                                                                                                                    
+  name: scan                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                    
+  jobs:                                                                                                                                                                                                                                             
+    scan:                                                                                                                                                                                                                                           
+      steps:                                                                                                                                                                                                                                        
+        - name: Initiate execution plan                                                                                                                                                                                                             
+          uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1                                                                                                                                                                    
+          id: plan                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                    
+        - name: Github Inventory                                                                                                                                                                                                                    
+          if: ${{ steps.plan.outputs.github-inventory == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:e7444f9a1dad87482778356ec66dcd5f22e1e71e                                                                                                                           
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+          run: /app/plugin-git-master -mode single                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                    
+        - name: Github Metadata                                                                                                                                                                                                                     
+          if: ${{ steps.plan.outputs.github-decorator == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:c390975713c23c76a84c0570322ee799d09083c3                                                                                                                            
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+          run: /app/plugin-git-decorator -mode single                                                                                                                                                                                               
+                                                                                                                                                                                                                                                    
+        - name: Bitbucket Inventory                                                                                                                                                                                                                 
+          if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}                                                                                                                                                                               
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb                                                                                                                           
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "MASTER"                                                                                                                                                                                                                
+          run: /app/plugin-bitbucket -mode single                                                                                                                                                                                                   
+                                                                                                                                                                                                                                                    
+        - name: Bitbucket Metadata                                                                                                                                                                                                                  
+          if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}                                                                                                                                                                               
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb                                                                                                                           
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "DECORATOR"                                                                                                                                                                                                             
+          run: /app/plugin-bitbucket -mode single                                                                                                                                                                                                   
+                                                                                                                                                                                                                                                    
+        - name: Gerrit Inventory                                                                                                                                                                                                                    
+          if: ${{ steps.plan.outputs.gerrit-inventory == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba                                                                                                                                     
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "MASTER"                                                                                                                                                                                                                
+          run: /app/plugin-gerrit -mode single                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                    
+        - name: Gerrit Metadata                                                                                                                                                                                                                     
+          if: ${{ steps.plan.outputs.gerrit-decorator == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba                                                                                                                                     
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "DECORATOR"                                                                                                                                                                                                             
+          run: /app/plugin-gerrit -mode single                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                    
+        - name: GitLab Inventory                                                                                                                                                                                                                    
+          if: ${{ steps.plan.outputs.gitlab-inventory == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035                                                                                                                                     
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "MASTER"                                                                                                                                                                                                                
+          run: /app/plugin-gitlab -mode single                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                    
+        - name: GitLab Metadata                                                                                                                                                                                                                     
+          if: ${{ steps.plan.outputs.gitlab-decorator == 'true' }}                                                                                                                                                                                  
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035                                                                                                                                     
+          env:                                                                                                                                                                                                                                      
+            ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}                                                                                                                                                                       
+            EXECUTION_ROLE: "DECORATOR"                                                                                                                                                                                                             
+          run: /app/plugin-gitlab -mode single                                                                                                                                                                                                      
+                                                                                                                                                                                                                                                    
+        - name: SCC Scanner                                                                                                                                                                                                                         
+          if: ${{ steps.plan.outputs.scc == 'true' }}                                                                                                                                                                                               
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:7fa7cb33d5da26ef1477d3dc3e4846a770fa3aa0                                                                                                                                
+          env:                                                                                                                                                                                                                                      
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-scc-scanner -mode single                                                                                                                                                                                                 
+                                                                                                                                                                                                                                                    
+        - name: GoSec Scanner                                                                                                                                                                                                                       
+          if: ${{ steps.plan.outputs.gosec == 'true' }}                                                                                                                                                                                             
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:92d7a0b05998b0bb4164d8521c8716112a41b7a7                                                                                                                              
+          env:                                                                                                                                                                                                                                      
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-gosec-scanner -mode single                                                                                                                                                                                               
+                                                                                                                                                                                                                                                    
+        - name: Njs Scanner                                                                                                                                                                                                                         
+          if: ${{ steps.plan.outputs.njsscan == 'true' }}                                                                                                                                                                                           
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-njsscan-scanner:b62ff1818f2f69887eeaaae97099695c8774d2b1                                                                                                                            
+          env:                                                                                                                                                                                                                                      
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-njsscan-scanner -mode single                                                                                                                                                                                             
+                                                                                                                                                                                                                                                    
+        - name: Gitleaks Scanner                                                                                                                                                                                                                    
+          if: ${{ steps.plan.outputs.gitleaks == 'true' }}                                                                                                                                                                                          
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:692a09d50b21acbb6e0d62cef92b768dfe84f91f                                                                                                                           
+          env:                                                                                                                                                                                                                                      
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-gitleaks-scanner -mode single                                                                                                                                                                                            
+                                                                                                                                                                                                                                                    
+        - name: BlackDuck Scanner                                                                                                                                                                                                                   
+          if: ${{ steps.plan.outputs.blackduck == 'true' }}                                                                                                                                                                                         
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:415ec498524dd9e284ec24b012fe27496376d26a                                                                                                                              
+          env:                                                                                                                                                                                                                                      
+            BLACKDUCK_PROPS: ${{ steps.plan.outputs.blackduck-props}}                                                                                                                                                                               
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-blackduck-scanner -mode single                                                                                                                                                                                           
+                                                                                                                                                                                                                                                    
+        - name: Coverity Polaris Scanner                                                                                                                                                                                                            
+          if: ${{ steps.plan.outputs.coverity == 'true' }}                                                                                                                                                                                          
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-coverity-sca:df2e0193e1720f78db612cf13edb600150d1792f                                                                                                                               
+          env:                                                                                                                                                                                                                                      
+            COVERITY_PROPS: ${{ steps.plan.outputs.coverity-props}}                                                                                                                                                                                 
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-coverity-polaris -mode single                                                                                                                                                                                            
+                                                                                                                                                                                                                                                    
+        - name: Checkov Scanner                                                                                                                                                                                                                     
+          if: ${{ steps.plan.outputs.checkov == 'true' }}                                                                                                                                                                                           
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:1c7c6b7a4e0fb030fd31ec9c7cd18b1c6897e00c                                                                                                                            
+          env:                                                                                                                                                                                                                                      
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}                                                                                                                                                                                                                   
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true                                                                                                                                                                                                                   
+          run: /app/plugin-checkov -mode single                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                    
+        - name: Snyk SAST Scanner                                                                                                                                                                                                                   
+          if: ${{ steps.plan.outputs.snykcode == 'true' }}                                                                                                                                                                                          
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sast-scanner:b0ff80552121e1c8a4cfc169a7811f67e899fd11                                                                                                                          
+          env:                                                                                                                                                                                                                                      
+            SNYK_SAST_PROPS: ${{ steps.plan.outputs.snykcode-props}}                                                                                                                                                                                
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}
+            STEP_ID: ${{ step.internal.id }}                                                                                                                                                                                                        
+          continue-on-error: true
+          run: /app/plugin-snyk-sast-scanner -mode single
 
-jobs:
-  scan:
-    steps:
-      - name: Initiate execution plan
-        uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
-        id: plan
+        - name: Snyk IaC Scanner
+          if: ${{ steps.plan.outputs.snyk-iac == 'true' }}
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-iac-scanner:d1c5db9841deee259bb4c736cf1222ec5600f845
+          env:                                                                                                                                                                                                                                      
+            SNYK_IAC_PROPS: ${{ steps.plan.outputs.snyk-iac-props}}
+            RUN_ID: ${{ cloudbees.run_id }}                                                                                                                                                                                                         
+            JOB_ID: ${{ job.id }}
+            STEP_ID: ${{ step.internal.id }}
+          continue-on-error: true
+          run: /app/plugin-snyk-iac-scanner -mode single
 
+        - name: Snyk SCA Scanner
+          if: ${{ steps.plan.outputs.snyksca == 'true' }}
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sca-scanner:26beda73d553bb1925103a14f7d721083b3e149a                                                                                                                           
+          env:
+            SNYK_SCA_PROPS: ${{ steps.plan.outputs.snyksca-props}}                                                                                                                                                                                  
+            RUN_ID: ${{ cloudbees.run_id }}
+            JOB_ID: ${{ job.id }}
+            STEP_ID: ${{ step.internal.id }}
+          continue-on-error: true
+          run: /app/plugin-snyk-sca-scanner -mode single
 
-      - name: Github Inventory
-        if: ${{ steps.plan.outputs.github-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-inventory:e7444f9a1dad87482778356ec66dcd5f22e1e71e
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-        run: /app/plugin-git-master -mode single
+        - name: Perforce Klocwork Scanner
+          if: ${{ steps.plan.outputs.perforce-klocwork-sast == 'true' }}
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:a4ec7ead705ee92b068b55daa2bab2f3e82a044b
+          env:
+            KLOCWORK_PROPS: ${{ steps.plan.outputs.perforce-klocwork-sast-props}}
+            RUN_ID: ${{ cloudbees.run_id }}
+            JOB_ID: ${{ job.id }}
+            STEP_ID: ${{ step.internal.id }}
+          continue-on-error: true
+          run: /app/plugin-klocwork-scanner -mode single
 
-      - name: Github Metadata
-        if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:c390975713c23c76a84c0570322ee799d09083c3
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-        run: /app/plugin-git-decorator -mode single
+        - name: Run test
+          uses: docker://python:3.11.8-slim
+          run: |
+            echo "Hello"
+            pwd
 
-      - name: Bitbucket Inventory
-        if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "MASTER"
-        run: /app/plugin-bitbucket -mode single
+        - name: Sonar Scanner
+          if: ${{ steps.plan.outputs.sonar == 'true' }}
+          uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:75d608d933dc16ac6c91272a9faec761cc67314c
+          env:
+            SONARQUBE_PROPS: ${{ steps.plan.outputs.sonar-props}}
+            RUN_ID: ${{ cloudbees.run_id }}
+            JOB_ID: ${{ job.id }}
+            STEP_ID: ${{ step.internal.id }}
+          continue-on-error: true
+          run: /app/plugin-sonarqube-scanner -mode single
 
-      - name: Bitbucket Metadata
-        if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "DECORATOR"
-        run: /app/plugin-bitbucket -mode single
-        
-      - name: Gerrit Inventory
-        if: ${{ steps.plan.outputs.gerrit-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "MASTER"
-        run: /app/plugin-gerrit -mode single
-
-      - name: Gerrit Metadata
-        if: ${{ steps.plan.outputs.gerrit-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gerrit:c84abe765795e1580230c15aa0d083c5ba25b3ba
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "DECORATOR"
-        run: /app/plugin-gerrit -mode single
-
-      - name: GitLab Inventory
-        if: ${{ steps.plan.outputs.gitlab-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "MASTER"
-        run: /app/plugin-gitlab -mode single
-
-      - name: GitLab Metadata
-        if: ${{ steps.plan.outputs.gitlab-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitlab:3c5949b6f0c1834e13bd2cc47122c60d23004035
-        env:
-          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
-          EXECUTION_ROLE: "DECORATOR"
-        run: /app/plugin-gitlab -mode single
-
-      - name: SCC Scanner
-        if: ${{ steps.plan.outputs.scc == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-scc-scanner:7fa7cb33d5da26ef1477d3dc3e4846a770fa3aa0
-        env:
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-scc-scanner -mode single
-
-      - name: GoSec Scanner
-        if: ${{ steps.plan.outputs.gosec == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gosec-scanner:92d7a0b05998b0bb4164d8521c8716112a41b7a7
-        env:
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-gosec-scanner -mode single
-
-      - name: Njs Scanner
-        if: ${{ steps.plan.outputs.njsscan == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-njsscan-scanner:b62ff1818f2f69887eeaaae97099695c8774d2b1
-        env:
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-njsscan-scanner -mode single
-
-      - name: Gitleaks Scanner
-        if: ${{ steps.plan.outputs.gitleaks == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-gitleaks-scanner:692a09d50b21acbb6e0d62cef92b768dfe84f91f
-        continue-on-error: true
-        env:
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        run: /app/plugin-gitleaks-scanner -mode single
-
-      - name: BlackDuck Scanner
-        if: ${{ steps.plan.outputs.blackduck == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:415ec498524dd9e284ec24b012fe27496376d26a
-        env:
-          BLACKDUCK_PROPS : ${{ steps.plan.outputs.blackduck-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-blackduck-scanner -mode single
-
-      - name: Coverity Polaris Scanner
-        if: ${{ steps.plan.outputs.coverity == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-coverity-sca:df2e0193e1720f78db612cf13edb600150d1792f
-        env:
-          COVERITY_PROPS : ${{ steps.plan.outputs.coverity-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-coverity-polaris -mode single
-
-      - name: Checkov Scanner
-        if: ${{ steps.plan.outputs.checkov == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:1c7c6b7a4e0fb030fd31ec9c7cd18b1c6897e00c
-        env:
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-checkov -mode single
-
-      - name: Snyk SAST Scanner
-        if: ${{ steps.plan.outputs.snykcode == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sast-scanner:b0ff80552121e1c8a4cfc169a7811f67e899fd11
-        env:
-          SNYK_SAST_PROPS: ${{ steps.plan.outputs.snykcode-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-snyk-sast-scanner -mode single
-
-      - name: Snyk IaC Scanner
-        if: ${{ steps.plan.outputs.snyk-iac == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-iac-scanner:d1c5db9841deee259bb4c736cf1222ec5600f845
-        env:
-          SNYK_IAC_PROPS: ${{ steps.plan.outputs.snyk-iac-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-snyk-iac-scanner -mode single
-
-      - name: Snyk SCA Scanner
-        if: ${{ steps.plan.outputs.snyksca == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-snyk-sca-scanner:26beda73d553bb1925103a14f7d721083b3e149a
-        env:
-          SNYK_SCA_PROPS: ${{ steps.plan.outputs.snyksca-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-snyk-sca-scanner -mode single
-
-      - name: Perforce Klocwork Scanner
-        if: ${{ steps.plan.outputs.perforce-klocwork-sast == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:a4ec7ead705ee92b068b55daa2bab2f3e82a044b
-        env:
-          KLOCWORK_PROPS: ${{ steps.plan.outputs.perforce-klocwork-sast-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-klocwork-scanner -mode single
-
-
-      - name: Sonar Scanner
-        if: ${{ steps.plan.outputs.sonar == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:75d608d933dc16ac6c91272a9faec761cc67314c
-        env:
-          SONARQUBE_PROPS: ${{ steps.plan.outputs.sonar-props}}
-          RUN_ID: ${{ cloudbees.run_id }}
-          JOB_ID: ${{ job.id }}
-          STEP_ID: ${{ step.internal.id }}
-        continue-on-error: true
-        run: /app/plugin-sonarqube-scanner -mode single
-
-
-      - name: Complete execution plan
-        uses: https://github.com/cloudbees-io/asset-chain-utils/end-chain@v1
-        id: process-outputs
+        - name: Complete execution plan
+          uses: https://github.com/cloudbees-io/asset-chain-utils/end-chain@v1
+          id: process-outputs
