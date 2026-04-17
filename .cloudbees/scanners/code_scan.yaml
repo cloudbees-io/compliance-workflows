@@ -199,12 +199,6 @@ jobs:
         continue-on-error: true
         run: /app/plugin-klocwork-scanner -mode single
 
-      - name: Run test
-        uses: docker://python:3.11.8-slim
-        run: |
-         echo "Hello"
-         pwd
-
 
       - name: Sonar Scanner
         if: ${{ steps.plan.outputs.sonar == 'true' }}
