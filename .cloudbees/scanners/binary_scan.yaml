@@ -75,6 +75,22 @@ jobs:
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-jfrog-artifactory:f57e72d4e9e991bcf06e2758d91986545bc2be9e
         run: /app/plugin-jfrog -mode single
 
+      - name: Nexus Repository Inventory
+        if: ${{ steps.plan.outputs.nexus-inventory == 'true' }}
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "MASTER"
+        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
+        run: /app/plugin-nexus -mode single
+
+      - name: Nexus Repository Metadata
+        if: ${{ steps.plan.outputs.nexus-metadata == 'true' }}
+        env:
+          ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
+          EXECUTION_ROLE: "DECORATOR"
+        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
+        run: /app/plugin-nexus -mode single
+
       - name: Trivy Scanner
         if: ${{ steps.plan.outputs.trivy == 'true' }}
         uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-trivy-scanner:91e1e9e794cb9c2bb69f44b41ab9c3ff5f765ca8
