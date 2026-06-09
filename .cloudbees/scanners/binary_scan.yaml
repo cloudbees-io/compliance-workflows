@@ -80,7 +80,7 @@ jobs:
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
-        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
         run: /app/plugin-nexus -mode single
 
       - name: Nexus Repository Metadata
@@ -88,7 +88,7 @@ jobs:
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
-        uses: docker://020229604682.dkr.ecr.us-east-1.amazonaws.com/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-nexus-repository:e524e7051651c08edc2a9a72fdcdbf569c25ad82
         run: /app/plugin-nexus -mode single
 
       - name: Trivy Scanner
