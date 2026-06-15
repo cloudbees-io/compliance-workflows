@@ -11,6 +11,12 @@ jobs:
     # condition. Cloud scans (code_scan.yaml) omit this and keep using /reserved/v1.
     env:
       EDGE_SCAN_RUN: "true"
+      # Carries the org's edge-redaction decision (CBP-46176) to transform time. The
+      # edge transformer reads this job env and, when "true", appends --suppress-logs
+      # to code-scanner steps so their stdout/stderr (which can quote matched source)
+      # is drained but never uploaded to the cloud (CBP-46173). The value comes from
+      # the org-scoped property edgeRedactionSuppressCodeScannerLogs.
+      EDGE_REDACTION_SUPPRESS_CODE_SCANNER_LOGS: ${{ vars.edgeRedactionSuppressCodeScannerLogs }}
     steps:
       - name: Initiate execution plan
         uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
