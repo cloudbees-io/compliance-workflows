@@ -86,11 +86,8 @@ jobs:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
           STEP_ID: ${{ step.internal.id }}
-          # Edge redaction (CBP-46173): when the org enables it, the engine drains
-          # this code scanner's stdout/stderr (which can quote matched source) instead
-          # of uploading it to the cloud. Set only on code/SAST scanner steps; SCA
-          # steps below omit it. Index access + default so an unset org var resolves
-          # to "false" (a dot-access undefined var would fail the whole edge scan).
+          # Edge redaction (CBP-46173): suppress this code scanner's logs (can quote
+          # source). Code/SAST steps only; index+default so an unset var → "false".
           CLOUDBEES_SUPPRESS_LOGS: ${{ vars['edgeRedactionSuppressCodeScannerLogs'] || 'false' }}
         continue-on-error: true
         run: /app/plugin-scc-scanner -mode single
