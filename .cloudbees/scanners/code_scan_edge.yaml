@@ -16,7 +16,13 @@ jobs:
       # to code-scanner steps so their stdout/stderr (which can quote matched source)
       # is drained but never uploaded to the cloud (CBP-46173). The value comes from
       # the org-scoped property edgeRedactionSuppressCodeScannerLogs.
-      EDGE_REDACTION_SUPPRESS_CODE_SCANNER_LOGS: ${{ vars.edgeRedactionSuppressCodeScannerLogs }}
+      #
+      # Index access (vars['...']) is used, NOT dot access (vars.x): an undefined
+      # workflow var read via dot access is a HARD ERROR that fails job-env validation
+      # at transform time, which would break every edge scan for orgs that haven't set
+      # the property. Index access returns empty for a missing key, and `|| 'false'`
+      # defaults it — so an unset property safely resolves to "false" (suppression off).
+      EDGE_REDACTION_SUPPRESS_CODE_SCANNER_LOGS: ${{ vars['edgeRedactionSuppressCodeScannerLogs'] || 'false' }}
     steps:
       - name: Initiate execution plan
         uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
