@@ -33,7 +33,7 @@ jobs:
 
       - name: Bitbucket Inventory
         if: ${{ steps.plan.outputs.bitbucket-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:36dcc16bf09268477b1df5558aff38d5caec9be2
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -41,7 +41,7 @@ jobs:
 
       - name: Bitbucket Metadata
         if: ${{ steps.plan.outputs.bitbucket-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:d359ed236bd0df1475147ee8ba64b4b97a9fb1cb
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-bitbucket-server:36dcc16bf09268477b1df5558aff38d5caec9be2
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
