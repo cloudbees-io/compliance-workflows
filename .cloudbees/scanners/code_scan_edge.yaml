@@ -274,7 +274,7 @@ jobs:
 
       - name: Perforce Klocwork Scanner
         if: ${{ steps.plan.outputs.perforce-klocwork-sast == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:a4ec7ead705ee92b068b55daa2bab2f3e82a044b
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-klocwork-scanner:3773435041acff15ea0d55d0700e8018e9cb09c9
         env:
           KLOCWORK_PROPS: ${{ steps.plan.outputs.perforce-klocwork-sast-props}}
           RUN_ID: ${{ cloudbees.run_id }}
