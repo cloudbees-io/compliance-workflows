@@ -185,7 +185,7 @@ jobs:
 
       - name: Checkov Scanner
         if: ${{ steps.plan.outputs.checkov == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:3be17eacd4df799177cc139cf4765f6e7bdf4780
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-checkov-scanner:a565e8b7960cf8d88e93abe095b40e98d0b51f5c
         env:
           RUN_ID: ${{ cloudbees.run_id }}
           JOB_ID: ${{ job.id }}
@@ -293,7 +293,7 @@ jobs:
 
       - name: Sonar Scanner
         if: ${{ steps.plan.outputs.sonar == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:315cc67ba551149baae34ccc6951cc5173f7a3c1
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-sonarqube-scanner:d292e832e2caa16ee8d4b22ad6d540746591f959
         env:
           SONARQUBE_PROPS: ${{ steps.plan.outputs.sonar-props}}
           RUN_ID: ${{ cloudbees.run_id }}
