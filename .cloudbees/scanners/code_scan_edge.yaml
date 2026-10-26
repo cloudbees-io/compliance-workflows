@@ -26,7 +26,7 @@ jobs:
 
       - name: Github Metadata
         if: ${{ steps.plan.outputs.github-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:f3bfdd8ec4a3258d1a0c4af206747835d0bb9c73
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-github-metadata:fb1cd38f35cd1bd265fa33e2fb974eaeeab424be
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
         run: /app/plugin-git-decorator -mode single
