@@ -116,7 +116,7 @@ jobs:
 
       - name: BlackDuck Scanner
         if: ${{ steps.plan.outputs.blackduck == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:ee9285b5ad330dd2d045d544f20df03c971c89b8
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/plugin-blackduck-sca:8797d0e1b2f6932ff46d2c254148f9277f6814c4
         env:
           BLACKDUCK_PROPS : ${{ steps.plan.outputs.blackduck-props}}
           RUN_ID: ${{ cloudbees.run_id }}
