@@ -6,7 +6,7 @@ jobs:
   scan:
     steps:
       - name: Initiate execution plan
-        uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@v1
+        uses: https://github.com/cloudbees-io/asset-chain-utils/start-chain@CBP-70041
         id: plan
 
 
@@ -74,7 +74,7 @@ jobs:
 
       - name: Cursor Inventory
         if: ${{ steps.plan.outputs.cursor-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:REPLACE_WITH_PLUGIN_SHA
+        uses: docker://localhost:46027/assets-cursor:dev
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -82,7 +82,7 @@ jobs:
 
       - name: Cursor Metadata
         if: ${{ steps.plan.outputs.cursor-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:REPLACE_WITH_PLUGIN_SHA
+        uses: docker://localhost:46027/assets-cursor:dev
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
@@ -231,5 +231,5 @@ jobs:
 
 
       - name: Complete execution plan
-        uses: https://github.com/cloudbees-io/asset-chain-utils/end-chain@v1
+        uses: https://github.com/cloudbees-io/asset-chain-utils/end-chain@CBP-70041
         id: process-outputs
