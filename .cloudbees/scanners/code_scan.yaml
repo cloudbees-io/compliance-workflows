@@ -74,7 +74,7 @@ jobs:
 
       - name: Cursor Inventory
         if: ${{ steps.plan.outputs.cursor-inventory == 'true' }}
-        uses: docker://guide-rails:5000/assets-cursor:dev
+        uses: docker://localhost:46027/assets-cursor:dev
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -82,7 +82,7 @@ jobs:
 
       - name: Cursor Metadata
         if: ${{ steps.plan.outputs.cursor-decorator == 'true' }}
-        uses: docker://guide-rails:5000/assets-cursor:dev
+        uses: docker://localhost:46027/assets-cursor:dev
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
