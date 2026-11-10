@@ -74,7 +74,7 @@ jobs:
 
       - name: Cursor Inventory
         if: ${{ steps.plan.outputs.cursor-inventory == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:REPLACE_WITH_PLUGIN_SHA
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:117eaeb986b6f0d9f9ffe8c64b8163dcd7e91222
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "MASTER"
@@ -82,7 +82,7 @@ jobs:
 
       - name: Cursor Metadata
         if: ${{ steps.plan.outputs.cursor-decorator == 'true' }}
-        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:REPLACE_WITH_PLUGIN_SHA
+        uses: docker://public.ecr.aws/l7o7z1g8/actions/assets-cursor:117eaeb986b6f0d9f9ffe8c64b8163dcd7e91222
         env:
           ACCOUNT_CREDENTIALS: ${{ steps.plan.outputs.account_credentials}}
           EXECUTION_ROLE: "DECORATOR"
